@@ -14,6 +14,7 @@ public class Scrapper {
 
     private final GsmArenaItemRepository gsmArenaItemRepository;
 
+    private final String baseUrl = "https://www.gsmarena.com/";
     private int mobilePhonesCount = 0;
 
     public void scrape() {
@@ -55,7 +56,7 @@ public class Scrapper {
 
             Thread.sleep(3000);
 
-            String url = "https://www.gsmarena.com/" + brandUrl;
+            String url = baseUrl + brandUrl;
             Document doc = Jsoup.connect(url).get();
 
             Elements elements = doc.select(".makers li a");
@@ -67,7 +68,7 @@ public class Scrapper {
                 readGsmItemDetails(element.attr("href"));
 
                 mobilePhonesCount++;
-//                break; //todo
+                break; //todo
             }
 
             /**
@@ -95,7 +96,7 @@ public class Scrapper {
 
             Thread.sleep(1500);
 
-            String url = "https://www.gsmarena.com/" + href;
+            String url = baseUrl + href;
             Document doc = Jsoup.connect(url).get();
 
             Element image = doc.selectFirst(".specs-photo-main img");
