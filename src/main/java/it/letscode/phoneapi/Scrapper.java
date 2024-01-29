@@ -8,6 +8,11 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Arrays;
+
 @Component
 @RequiredArgsConstructor
 public class Scrapper {
@@ -68,7 +73,7 @@ public class Scrapper {
                 readGsmItemDetails(element.attr("href"));
 
                 mobilePhonesCount++;
-                break; //todo
+//                break; //todo
             }
 
             /**
@@ -94,27 +99,82 @@ public class Scrapper {
         System.out.println("details: " + href);
         try {
 
-            Thread.sleep(1500);
+            Thread.sleep(2400);
 
+            /**
+             * Create Full url
+             */
             String url = baseUrl + href;
+
+            /**
+             * Create model
+             */
+            GsmArenaItem gsmArenaItem = new GsmArenaItem();
+            gsmArenaItem.setItemUrl(url);
+
+            /**
+             * Load html from page
+             */
             Document doc = Jsoup.connect(url).get();
 
+            /**
+             * Get default item photo
+             */
             Element image = doc.selectFirst(".specs-photo-main img");
-
             if(image != null) {
 
+                /**
+                 * Save url
+                 */
                 String imageUrl = image.attr("src");
-
                 System.out.println("Phone Image: " + imageUrl);
-
-                GsmArenaItem gsmArenaItem = new GsmArenaItem();
-                gsmArenaItem.setItemUrl(url);
                 gsmArenaItem.setImageUrl(imageUrl);
-                gsmArenaItemRepository.save(gsmArenaItem);
+
+                /**
+                 * Save binary data
+                 */
+                URL imageUri = new URL(imageUrl);
+                URLConnection imageUriConnection = imageUri.openConnection();
+                InputStream imageInputStream = imageUriConnection.getInputStream();
+                byte[] imageData = imageInputStream.readAllBytes();
+                gsmArenaItem.setImageData(imageData);
 
             } else {
                 System.out.println("Phone image not found.");
             }
+
+            /**
+             * Get model name
+             */
+            Element modelNameElement = doc.selectFirst(".specs-phone-name-title");
+            if(modelNameElement != null) {
+
+                String modelName = modelNameElement.text();
+                System.out.println("Model name: " + modelName);
+                gsmArenaItem.setModelName(modelName);
+
+            } else {
+                System.out.println("Model name not found.");
+            }
+
+            /**
+             * Get models list
+             */
+            Element modelsElement = doc.selectFirst("[data-spec=\"models\"]");
+            if(modelsElement != null) {
+
+                String[] modelsArray = modelsElement.text().split(", ");
+                System.out.println("Models: " + Arrays.toString(modelsArray));
+                gsmArenaItem.setModels(modelsArray);
+
+            } else {
+                System.out.println("Models not found.");
+            }
+
+            /**
+             * Save model to database
+             */
+            gsmArenaItemRepository.save(gsmArenaItem);
 
         } catch (Exception e) {
             System.out.println("Exception:");
