@@ -12,5 +12,7 @@ public class GsmArenaItem {
     private String id;
 
     @Indexed(unique = true)
-    private String url;
+    private String itemUrl;
+
+    private String imageUrl;
 }

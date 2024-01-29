@@ -17,33 +17,36 @@ public class Scrapper {
     private int mobilePhonesCount = 0;
 
     public void scrape() {
-        System.out.println("Testowa komenda ok");
+        System.out.println("Testowa komenda ok 2345");
 
-        GsmArenaItem gsmArenaItem = new GsmArenaItem();
-        gsmArenaItem.setUrl("testowy url");
-        gsmArenaItemRepository.save(gsmArenaItem);
+//        GsmArenaItem gsmArenaItem = new GsmArenaItem();
+//        gsmArenaItem.setUrl("testowy url");
+//        gsmArenaItemRepository.save(gsmArenaItem);
 
 
-//        try {
-//            String url = "https://www.gsmarena.com/makers.php3";
-//            Document doc = Jsoup.connect(url).get();
-//
-//            Elements elements = doc.select("table a");
-//
-//            for (Element element : elements) {
-//                String text = element.text();
-//                System.out.println(text);
-//
-//                scrapTargetBrand(element.attr("href"));
-//
-////                break; //todo
-//            }
-//
-//            System.out.println("Mobile phones count: " + mobilePhonesCount);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            String url = "https://www.gsmarena.com/makers.php3";
+            Document doc = Jsoup.connect(url).get();
+
+            Elements elements = doc.select("table a");
+
+            System.out.println("Test 1");
+
+            for (Element element : elements) {
+                String text = element.text();
+                System.out.println(text);
+
+                scrapTargetBrand(element.attr("href"));
+
+//                break; //todo
+            }
+
+            System.out.println("Mobile phones count: " + mobilePhonesCount);
+
+        } catch (Exception e) {
+            System.out.println("Exception:");
+            e.printStackTrace();
+        }
     }
 
     private void scrapTargetBrand(String brandUrl) {
@@ -87,7 +90,35 @@ public class Scrapper {
     }
 
     private void readGsmItemDetails(String href) {
-        // todo
+        System.out.println("details: " + href);
+        try {
+
+            Thread.sleep(1500);
+
+            String url = "https://www.gsmarena.com/" + href;
+            Document doc = Jsoup.connect(url).get();
+
+            Element image = doc.selectFirst(".specs-photo-main img");
+
+            if(image != null) {
+
+                String imageUrl = image.attr("src");
+
+                System.out.println("Phone Image: " + imageUrl);
+
+                GsmArenaItem gsmArenaItem = new GsmArenaItem();
+                gsmArenaItem.setItemUrl(url);
+                gsmArenaItem.setImageUrl(imageUrl);
+                gsmArenaItemRepository.save(gsmArenaItem);
+
+            } else {
+                System.out.println("Phone image not found.");
+            }
+
+        } catch (Exception e) {
+            System.out.println("Exception:");
+            e.printStackTrace();
+        }
     }
 
 }

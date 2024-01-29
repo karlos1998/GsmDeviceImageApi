@@ -42,6 +42,7 @@ tasks.named('test') {
 }
 
 tasks.register('scrape') {
+	dependsOn 'build'
 	doLast {
 		javaexec {
 			classpath = sourceSets.main.runtimeClasspath
