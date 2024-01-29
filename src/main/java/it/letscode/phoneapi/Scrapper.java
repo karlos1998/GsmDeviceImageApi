@@ -1,5 +1,6 @@
 package it.letscode.phoneapi;
 
+import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -8,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class Scrapper {
 
-    @Autowired
-    private GsmArenaItemRepository gsmArenaItemRepository;
+    private final GsmArenaItemRepository gsmArenaItemRepository;
 
     private int mobilePhonesCount = 0;
 
@@ -60,6 +61,8 @@ public class Scrapper {
                 String text = element.text();
                 System.out.println(text);
 
+                readGsmItemDetails(element.attr("href"));
+
                 mobilePhonesCount++;
 //                break; //todo
             }
@@ -81,6 +84,10 @@ public class Scrapper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void readGsmItemDetails(String href) {
+        // todo
     }
 
 }

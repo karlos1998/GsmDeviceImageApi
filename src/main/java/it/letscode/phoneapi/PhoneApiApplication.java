@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class PhoneApiApplication {
 
 	public static void main(String[] args) {
+		System.out.println("PhoneApiApplication Started.");
 		SpringApplication.run(PhoneApiApplication.class, args);
 	}
 
