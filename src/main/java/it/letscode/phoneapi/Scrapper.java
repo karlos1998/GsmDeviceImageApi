@@ -99,7 +99,7 @@ public class Scrapper {
         System.out.println("details: " + href);
         try {
 
-            Thread.sleep(2400);
+            Thread.sleep(2000);
 
             /**
              * Create Full url
@@ -133,6 +133,7 @@ public class Scrapper {
                 /**
                  * Save binary data
                  */
+                Thread.sleep(1000);
                 URL imageUri = new URL(imageUrl);
                 URLConnection imageUriConnection = imageUri.openConnection();
                 InputStream imageInputStream = imageUriConnection.getInputStream();
