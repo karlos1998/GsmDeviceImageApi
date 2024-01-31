@@ -25,10 +25,7 @@ public class Scrapper {
     public void scrape() {
         System.out.println("Testowa komenda ok 2345");
 
-//        GsmArenaItem gsmArenaItem = new GsmArenaItem();
-//        gsmArenaItem.setUrl("testowy url");
-//        gsmArenaItemRepository.save(gsmArenaItem);
-
+//        scrapTargetBrand("samsung-phones-9.php");
 
         try {
             String url = "https://www.gsmarena.com/makers.php3";
@@ -47,21 +44,28 @@ public class Scrapper {
 //                break; //todo
             }
 
-            System.out.println("Mobile phones count: " + mobilePhonesCount);
-
         } catch (Exception e) {
             System.out.println("Exception:");
             e.printStackTrace();
         }
+
+        System.out.println("Mobile phones count: " + mobilePhonesCount);
     }
+
+    private int removeMe = 1;
 
     private void scrapTargetBrand(String brandUrl) {
 
+        System.out.println("Page: " + removeMe++);
+
         try {
 
-            Thread.sleep(3000);
+            Thread.sleep(1700);
 
             String url = baseUrl + brandUrl;
+
+            System.out.println("Url: " + url);
+            
             Document doc = Jsoup.connect(url).get();
 
             Elements elements = doc.select(".makers li a");
@@ -79,14 +83,18 @@ public class Scrapper {
             /**
              * Przejdz na kolejna strone
              */
-            Element link = doc.selectFirst("a.pages-next:not(.disabled)");
+            Element link = doc.selectFirst(".nav-pages a.prevnextbutton:last-child");
 
             if (link != null) {
                 String href = link.attr("href");
-                System.out.println("Link: " + href);
-                scrapTargetBrand(href);
+                if(!href.equals("#")) {
+                    System.out.println("Link: " + href);
+                    scrapTargetBrand(href);
+                } else {
+                    System.out.println("Not fund next page (#) :)");
+                }
             } else {
-                System.out.println("Nie znaleziono odpowiedniego linku.");
+                System.out.println("Not found next page button.");
             }
 
 
