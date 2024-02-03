@@ -20,6 +20,9 @@ public class GsmArenaItem {
     @JsonIgnore
     private byte[] imageData;
 
+    @JsonIgnore
+    private byte[] imageDataWithoutBackground;
+
     private String modelName;
 
     private String[] models;
