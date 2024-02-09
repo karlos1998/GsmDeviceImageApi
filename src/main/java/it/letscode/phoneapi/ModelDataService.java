@@ -15,7 +15,7 @@ public class ModelDataService {
     private final RemoveBgService removeBgService;
 
     public Optional<GsmArenaItem> getItemByModel(String model) {
-        return repository.findByModel(model);
+        return repository.findByModelOrModelNameSimilar(model, ".*" + model.replaceAll("\\s+", "").toLowerCase() + ".*");
     }
 
     public byte[] getImageDataByModel(String model, Optional<String> background, Optional<String> apiKey) {

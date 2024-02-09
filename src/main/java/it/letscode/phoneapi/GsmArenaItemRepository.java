@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GsmArenaItemRepository extends MongoRepository<GsmArenaItem, String> {
-    @Query("{ 'models': ?0 }")
-    Optional<GsmArenaItem> findByModel(String model);
+    @Query("{ '$or': [ { 'models': ?0 }, { 'modelName': { '$regex': ?1, '$options': 'i' } } ] }")
+    Optional<GsmArenaItem> findByModelOrModelNameSimilar(String model, String regexPattern);
 }

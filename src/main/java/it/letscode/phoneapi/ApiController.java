@@ -20,7 +20,7 @@ public class ApiController {
 
     @GetMapping("/find-data-by-model")
     public ResponseEntity<GsmArenaItem> getItemByModel(@RequestParam String model) {
-        return repository.findByModel(model)
+        return modelDataService.getItemByModel(model)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
